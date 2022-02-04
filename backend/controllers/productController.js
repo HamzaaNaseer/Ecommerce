@@ -1,4 +1,5 @@
 const Product = require("../models/productModel"); //importing product schema
+const ApiFeatures = require("../utils/apifeatures");
 
 //TODO:ERROR HANDELING
 
@@ -16,7 +17,8 @@ exports.createProduct = async (req, res, next) => {
 //get all products
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const apiFeature = new ApiFeatures(Product.find(), req.query).search();
+    const products = await apiFeature.query;
     return res.status(200).json({ success: true, products });
   } catch (error) {
     console.log("error is ", error);
