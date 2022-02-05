@@ -16,15 +16,21 @@ exports.createProduct = async (req, res, next) => {
 
 //get all products
 exports.getAllProducts = async (req, res) => {
+  const resultPerpage = 2;
   try {
+    const totalProducts = await Product.countDocuments();
     const apiFeature = new ApiFeatures(Product.find(), req.query)
       .search()
-      .filter();
+      .filter()
+      .pagination(resultPerpage);
     const products = await apiFeature.query;
-    return res.status(200).json({ success: true, products });
+    return res.status(200).json({ success: true, totalProducts, products });
   } catch (error) {
     console.log("error is ", error);
-    res.status(500).json({ success: false, message: "internal server error" });
+    res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
   }
 };
 
