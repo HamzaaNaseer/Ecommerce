@@ -32,7 +32,6 @@ const productSchema = new Schema({
       },
     },
   ],
-  //TODO category , stock(defaulut 0),numofreviews,reviews(name,rating,comment),createdAT
   category: {
     type: String,
     required: [true, "please enter the category of the product"],
