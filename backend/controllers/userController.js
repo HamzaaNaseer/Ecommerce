@@ -9,7 +9,8 @@ exports.createUser = async (req, res) => {
 
     var hash = bcrypt.hashSync(password, 10);
     const user = await User.create({ name, email, password: hash, avatar });
-    return res.status(201).json({ success: true, user });
+    const token = user.getJWTToken();
+    return res.status(201).json({ success: true, token });
   } catch (error) {
     console.log("error is ", error.message);
     res.status(500).json({ success: false, message: error.message });
