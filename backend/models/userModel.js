@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new Schema({
   name: {
@@ -48,6 +49,11 @@ userSchema.methods.getJWTToken = function () {
   return jwt.sign({ id: this._id }, process.env.SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
+};
+//TODO : CREATE PASSWORD COMPARING FUNCTION
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  console.log(enteredPassword);
+  return await bcrypt.compare(enteredPassword, this.password);
 };
 
 module.exports = mongoose.model("User", userSchema);
