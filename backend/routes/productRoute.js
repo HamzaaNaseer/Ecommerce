@@ -7,8 +7,9 @@ const {
   deleteProduct,
   getProductDetails,
 } = require("../controllers/productController"); //importing controllers
+const { isAuthenticated } = require("../middleware/isAuthenticated");
 
-router.get("/getAllProducts", getAllProducts);
+router.get("/getAllProducts", isAuthenticated,getAllProducts);
 router.post("/product/new", createProduct);
 router
   .route("/product/:id")

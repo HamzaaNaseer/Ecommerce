@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const generateToken = require("../utils/jwtToken");
 
 exports.createUser = async (req, res) => {
   try {
@@ -9,8 +10,7 @@ exports.createUser = async (req, res) => {
 
     var hash = bcrypt.hashSync(password, 10);
     const user = await User.create({ name, email, password: hash, avatar });
-    const token = user.getJWTToken();
-    return res.status(201).json({ success: true, token });
+    generateToken(user, 201, res);
   } catch (error) {
     console.log("error is ", error.message);
     return res.status(500).json({ success: false, message: error.message });
@@ -36,7 +36,6 @@ exports.login = async (req, res) => {
       });
     }
     const passwordMatched = await user.comparePassword(password);
-    console.log(passwordMatched);
     //if password does not match then quit
     if (!passwordMatched) {
       return res.json({
@@ -44,8 +43,7 @@ exports.login = async (req, res) => {
         message: "pls enter correct credentials",
       });
     }
-    const token = user.getJWTToken();
-    return res.status(201).json({ success: true, token });
+    generateToken(user, 200, res);
   } catch (error) {
     console.log(error.message);
     return res.status(500).json({ success: false, message: error.message });
