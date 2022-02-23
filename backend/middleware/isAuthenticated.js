@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 exports.isAuthenticated = async (req, res, next) => {
   const { token } = req.cookies;
   if (!token) {
-    return res.json({ success: false, message: "no token found" });
+    return res.json({ success: false, message: "login to access this resource" });
   }
 
   //extracting user from token

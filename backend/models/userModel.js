@@ -41,9 +41,7 @@ const userSchema = new Schema({
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });
-userSchema.pre("save", async function (next) {
-  //hash your password here
-});
+
 //generate jwt token
 userSchema.methods.getJWTToken = function () {
   return jwt.sign({ id: this._id }, process.env.SECRET_KEY, {

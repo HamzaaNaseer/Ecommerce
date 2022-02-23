@@ -1,6 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
-const generateToken = require("../utils/jwtToken");
+const generateToken = require("../utils/generateToken");
 
 exports.createUser = async (req, res) => {
   try {
@@ -16,8 +16,8 @@ exports.createUser = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-//TODO : CREATE LOGIN FUNCTION
 
+//login user
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -48,4 +48,11 @@ exports.login = async (req, res) => {
     console.log(error.message);
     return res.status(500).json({ success: false, message: error.message });
   }
+};
+
+//logout user
+
+exports.logout = async (req, res) => {
+  res.cookie("token", null, { expires: new Date(Date.now()), httpOnly: true });
+  return res.status(200).json({ success: true, message: "logged out" });
 };
