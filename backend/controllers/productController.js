@@ -35,7 +35,7 @@ exports.getAllProducts = async (req, res) => {
 };
 
 //updating a product --ADMIN
-exports.updateProduct = async (req, res, next) => {
+exports.updateProduct = async (req, res) => {
   try {
     //finding the product to be updated
     let productToUpdate = await Product.findById(req.params.id);
@@ -59,7 +59,7 @@ exports.updateProduct = async (req, res, next) => {
   }
 };
 //deleting a product --ADMIN
-exports.deleteProduct = async (req, res, next) => {
+exports.deleteProduct = async (req, res) => {
   try {
     //finding the product to be deleted
     //get product details

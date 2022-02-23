@@ -3,7 +3,10 @@ const User = require("../models/userModel");
 exports.isAuthenticated = async (req, res, next) => {
   const { token } = req.cookies;
   if (!token) {
-    return res.json({ success: false, message: "login to access this resource" });
+    return res.json({
+      success: false,
+      message: "login to access this resource",
+    });
   }
 
   //extracting user from token
@@ -11,4 +14,17 @@ exports.isAuthenticated = async (req, res, next) => {
   req.user = await User.findById(data.id);
 
   next();
+};
+
+exports.authorizeRoles = (...roles) => {
+  //returning a function because i want to pass roles 
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res
+        .status(403)
+        .json({ message: "not allowed to access this resource" });
+    }
+    console.log("testing")
+    next();
+  };
 };
