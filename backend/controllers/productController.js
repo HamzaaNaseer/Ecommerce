@@ -4,8 +4,9 @@ const ApiFeatures = require("../utils/apifeatures");
 //TODO:ERROR HANDELING
 
 //create a product -- ADMIN
-exports.createProduct = async (req, res, next) => {
+exports.createProduct = async (req, res) => {
   try {
+    req.body.user = req.user.id
     const product = await Product.create(req.body);
     return res.status(201).json({ success: true, product: product });
   } catch (error) {

@@ -12,10 +12,13 @@ exports.isAuthenticated = async (req, res, next) => {
   //extracting user from token
   const data = jwt.verify(token, process.env.SECRET_KEY);
   req.user = await User.findById(data.id);
+  console.log(req.user)
 
   next();
 };
 
+
+//middleware that checks that if a person requesting is authorized to access
 exports.authorizeRoles = (...roles) => {
   //returning a function because i want to pass roles 
   return (req, res, next) => {
