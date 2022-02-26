@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const generateToken = require("../utils/generateToken");
 const sendEmail = require("../utils/sendEmail.js");
 
@@ -61,9 +62,9 @@ exports.logout = async (req, res) => {
 //forgot password
 
 exports.forgotPassword = async (req, res) => {
+  //get the user who is requesting for password reset
+  const user = await User.findOne({ email: req.body.email });
   try {
-    //get the user who is requesting for password reset
-    const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return res.json({ success: false, message: "no user found" });
     }
@@ -73,30 +74,67 @@ exports.forgotPassword = async (req, res) => {
     //user.save() because getResetPasswordToken function makes changing to the user
     //and those needed to be saved
     await user.save({ validateBeforeSave: false });
+    console.log(user);
 
     //creating a reset password url
     const resetPasswordUrl = `${req.protocol}://${req.get(
       "host"
-    )}/api/v1/password/resest/${resetToken}`;
+    )}/api/v1/password/reset/${resetToken}`;
 
     //message that will be sent in the email
-    const message = `your password reset token is below : \n\n ${resetToken} \n if you have not requested for this then simply ignore this mail`;
+    const message = `your password reset token is below : \n\n ${resetPasswordUrl} \n if you have not requested for this then simply ignore this mail`;
 
     //sending email
     await sendEmail({
       email: user.email,
       subject: "reset password",
       message,
+      resetPasswordUrl
     });
     return res.status(201).json({
       success: true,
       message: `email sent successfully to ${user.email}`,
     });
   } catch (error) {
+    console.log(error);
+
     user.resetPasswordExpire = undefined;
     user.resetPasswordToken = undefined;
+    console.log(user);
     await user.save({ validateBeforeSave: false });
-    console.log(error.message);
     return res.status(500).json({ success: false, message: error.message });
   }
+};
+
+//reset password
+exports.resetPassword = async (req, res) => {
+  //creating token hash
+  const resetPasswordToken = crypto
+    .Hash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
+  if (!user) {
+    return res.json({
+      success: false,
+      message: "reset password token is invalid or has been expred",
+    });
+  }
+  if (req.body.password !== req.body.confirmPassword) {
+    return res.json({
+      success: false,
+      message: "password does not match",
+    });
+  }
+  var hash = bcrypt.hashSync(req.body.password, 10);
+  user.password = hash;
+  user.resetPasswordExpire = undefined;
+  user.resetPasswordToken = undefined;
+
+  await user.save();
+  generateToken(user, 200, res);
 };
