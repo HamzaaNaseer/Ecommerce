@@ -206,3 +206,24 @@ exports.updateProfile = async (req, res) => {
 
   return res.status(200).json({ success: true });
 };
+
+//get all users -- ADMIN
+exports.getAllUsers = async (req, res) => {
+  //below query will return us all the users
+  users = await User.find();
+
+  return res.status(200).json({ users });
+};
+
+//get single user -- ADMIN
+exports.getSingleUser = async (req, res) => {
+  //below query will return us all the users
+  user = await User.findById(req.params.id);
+  if (!user) {
+    return res
+      .status(500)
+      .json({ message: "no user with the given id exists" });
+  }
+
+  return res.status(200).json({ user });
+};
