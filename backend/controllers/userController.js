@@ -227,3 +227,50 @@ exports.getSingleUser = async (req, res) => {
 
   return res.status(200).json({ user });
 };
+
+//update user role :: ADMIN
+
+exports.updateUserRole = async (req, res) => {
+  try {
+    let user = await User.findById(req.params.id);
+
+    if (!user) {
+      res.status(500).json({ message: "no user with provide id exists" });
+    }
+    //first get the data that needs to be updated
+    const newData = {
+      email: req.body.email,
+      name: req.body.name,
+      role: req.body.role,
+    };
+
+    user = await User.findByIdAndUpdate(req.params.id, newData, {
+      new: true,
+      runValidators: true,
+      useFindandModify: false,
+    });
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      res.status(500).json({ message: "no user with provide id exists" });
+    }
+
+    //TODO : DELETE CLOUDINARY LATER
+
+    await user.remove();
+
+    return res.status(200).json({ success: true });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
