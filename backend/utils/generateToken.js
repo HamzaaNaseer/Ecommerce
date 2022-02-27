@@ -15,4 +15,3 @@ const generateToken = (user, statusCode, res) => {
 };
 
 module.exports = generateToken;
- 

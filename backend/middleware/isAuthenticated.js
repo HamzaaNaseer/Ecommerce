@@ -12,22 +12,19 @@ exports.isAuthenticated = async (req, res, next) => {
   //extracting user from token
   const data = jwt.verify(token, process.env.SECRET_KEY);
   req.user = await User.findById(data.id);
-  console.log(req.user)
-
   next();
 };
 
-
 //middleware that checks that if a person requesting is authorized to access
 exports.authorizeRoles = (...roles) => {
-  //returning a function because i want to pass roles 
+  //returning a function because i want to pass roles
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res
         .status(403)
         .json({ message: "not allowed to access this resource" });
     }
-    console.log("testing")
+    console.log("testing");
     next();
   };
 };

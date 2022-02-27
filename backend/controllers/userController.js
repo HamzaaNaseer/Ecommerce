@@ -55,6 +55,7 @@ exports.login = async (req, res) => {
 //logout user
 
 exports.logout = async (req, res) => {
+  //deleting the token from the cookie
   res.cookie("token", null, { expires: new Date(Date.now()), httpOnly: true });
   return res.status(200).json({ success: true, message: "logged out" });
 };
@@ -89,7 +90,7 @@ exports.forgotPassword = async (req, res) => {
       email: user.email,
       subject: "reset password",
       message,
-      resetPasswordUrl
+      resetPasswordUrl,
     });
     return res.status(201).json({
       success: true,
@@ -137,4 +138,71 @@ exports.resetPassword = async (req, res) => {
 
   await user.save();
   generateToken(user, 200, res);
+};
+
+//get user details
+exports.getUserDetails = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.json({
+        success: false,
+        message: "login to access this resource",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+//update profile
+
+exports.updatePassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("+password");
+    const passwordMatched = await user.comparePassword(req.body.oldPassword);
+    //if password does not match then quit
+    if (!passwordMatched) {
+      return res.json({
+        success: false,
+        message: "pls enter correct credentials",
+      });
+    }
+    if (req.body.newPassword !== req.body.confirmPassword) {
+      return res.json({
+        success: false,
+        message: "the two passwords does not match",
+      });
+    }
+    var hash = bcrypt.hashSync(req.body.newPassword, 10);
+    user.password = hash;
+    await user.save();
+    generateToken(user, 200, res);
+    console.log(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//update profile
+
+exports.updateProfile = async (req, res) => {
+  //first get the data that needs to be updated
+  const newData = {
+    email: req.body.email,
+    name: req.body.name,
+  };
+
+  //TODO : ADD CLOUDINARY LATER
+  const user = await User.findByIdAndUpdate(req.user.id, newData, {
+    new: true,
+    runValidators: true,
+    useFindandModify: false,
+  });
+
+  return res.status(200).json({ success: true });
 };

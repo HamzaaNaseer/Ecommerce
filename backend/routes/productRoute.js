@@ -12,7 +12,7 @@ const {
   authorizeRoles,
 } = require("../middleware/isAuthenticated");
 
-router.get("/getAllProducts", isAuthenticated, getAllProducts);
+router.get("/getAllProducts", getAllProducts);
 router.post(
   "/product/new",
   isAuthenticated,
@@ -22,7 +22,8 @@ router.post(
 router
   .route("/product/:id")
   .put(isAuthenticated, authorizeRoles("admin"), updateProduct)
-  .delete(isAuthenticated, authorizeRoles("admin"), deleteProduct)
-  .get(getProductDetails);
+  .delete(isAuthenticated, authorizeRoles("admin"), deleteProduct);
+
+router.get("/product/:id", getProductDetails);
 
 module.exports = router;
