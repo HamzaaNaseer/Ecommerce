@@ -6,7 +6,7 @@ const ApiFeatures = require("../utils/apifeatures");
 //create a product -- ADMIN
 exports.createProduct = async (req, res) => {
   try {
-    req.body.user = req.user.id
+    req.body.user = req.user.id;
     const product = await Product.create(req.body);
     return res.status(201).json({ success: true, product: product });
   } catch (error) {
@@ -82,7 +82,7 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ success: false, message: "internal server error" });
   }
 };
-
+//get product details
 exports.getProductDetails = async (req, res, next) => {
   try {
     //finding the product to get the details
@@ -100,4 +100,45 @@ exports.getProductDetails = async (req, res, next) => {
     console.log("error is ", error);
     res.status(500).json({ success: false, message: "internal server error" });
   }
+};
+//creating a product review
+exports.createProductReview = async (req, res, next) => {
+  const { rating, comment, productId } = req.body;
+  //TODO :: FIND THE PRODUCT ON WHICH WE ARE GIVING THE REVIEW
+  const product = await Product.findById(productId);
+  //TODO :: CREATE A NEW REVIEW OBJECT WITH ALL THE REQUIED FEILDS
+
+  const review = {
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+    user: req.user.id,
+  };
+
+  //TODO :: CHECK IF THE REVIEW BY THE USER ALREADY EXISTS
+  const isAlreadyReveiwed = product.reviews.find(
+    (r) => String(r.user) === String(req.user.id)
+  );
+  //TODO :: IF IT EXISTS UPDATE IT IF NOT CREATE A NEW REVIEW
+  if (isAlreadyReveiwed) {
+    product.reviews.forEach((r) => {
+      if (String(r.user) === String(req.user.id)) {
+        r.rating = rating;
+        r.comment = comment;
+      }
+    });
+  } else {
+    //simply pushing the review in the array
+    product.reviews.push(review);
+    product.numOfReviews = product.reviews.length;
+  }
+  let sum = 0;
+  product.reviews.forEach((r) => {
+    sum += r.rating;
+  });
+  const avg = sum / product.reviews.length || 0;
+  product.ratings = avg;
+
+  await product.save({ validateBeforeSave: false });
+  return res.status(200).json({ sucess: true });
 };

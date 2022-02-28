@@ -250,7 +250,9 @@ exports.updateUserRole = async (req, res) => {
       useFindandModify: false,
     });
 
-    return res.status(200).json({ success: true });
+    return res
+      .status(200)
+      .json({ success: true, message: "user updated succesfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -268,7 +270,9 @@ exports.deleteUser = async (req, res) => {
 
     await user.remove();
 
-    return res.status(200).json({ success: true });
+    return res
+      .status(200)
+      .json({ success: true, message: "user deleted sucessfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: error.message });

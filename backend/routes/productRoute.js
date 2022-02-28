@@ -6,6 +6,7 @@ const {
   updateProduct,
   deleteProduct,
   getProductDetails,
+  createProductReview,
 } = require("../controllers/productController"); //importing controllers
 const {
   isAuthenticated,
@@ -25,5 +26,6 @@ router
   .delete(isAuthenticated, authorizeRoles("admin"), deleteProduct);
 
 router.get("/product/:id", getProductDetails);
+router.put("/review", isAuthenticated, createProductReview);
 
 module.exports = router;
