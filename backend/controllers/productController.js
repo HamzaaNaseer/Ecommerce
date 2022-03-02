@@ -142,3 +142,55 @@ exports.createProductReview = async (req, res, next) => {
   await product.save({ validateBeforeSave: false });
   return res.status(200).json({ sucess: true });
 };
+
+//route for getting all product reviews
+exports.getAllReviews = async (req, res, next) => {
+  // selecting product of which we want reviews
+  const product = await Product.findById(req.params.id);
+  if (!product) {
+    return res
+      .status(500)
+      .json({ success: false, message: "product not found" });
+  }
+  //now product has been found
+  return res.status(200).json({ success: true, reviews: product.reviews });
+};
+
+//route for deleting a review
+exports.deleteReview = async (req, res, next) => {
+  // selecting product of which we want to delete a review
+  const product = await Product.findById(req.query.productId);
+  if (!product) {
+    return res
+      .status(500)
+      .json({ success: false, message: "product not found" });
+  }
+  //now product has been found
+  const reviews = product.reviews.filter(
+    //this will not filter the review that we wants to delete
+    (rev) => rev._id.toString() !== req.query.reviewId.toString()
+  );
+  let sum = 0;
+  reviews.forEach((r) => {
+    sum += r.rating;
+  });
+  const avg = sum / reviews.length || 0;
+  ratings = avg;
+  numOfReviews = reviews.length;
+
+  await Product.findByIdAndUpdate(
+    req.query.productId,
+    {
+      reviews,
+      numOfReviews,
+      ratings,
+    },
+    {
+      new: true,
+      runValidators: true,
+      useFindAndModify: true,
+    }
+  );
+
+  return res.status(200).json({ success: true });
+};

@@ -7,6 +7,8 @@ const {
   deleteProduct,
   getProductDetails,
   createProductReview,
+  getAllReviews,
+  deleteReview,
 } = require("../controllers/productController"); //importing controllers
 const {
   isAuthenticated,
@@ -27,5 +29,7 @@ router
 
 router.get("/product/:id", getProductDetails);
 router.put("/review", isAuthenticated, createProductReview);
+router.get("/getAllReviews/:id", getAllReviews);
+router.delete("/deleteReview", isAuthenticated, deleteReview);
 
 module.exports = router;
