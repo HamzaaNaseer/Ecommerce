@@ -166,6 +166,8 @@ exports.deleteReview = async (req, res, next) => {
       .json({ success: false, message: "product not found" });
   }
   //now product has been found
+
+  //TODO:: MAKE SURE THE USER IS DELETING HIS OWN REVIEWS
   const reviews = product.reviews.filter(
     //this will not filter the review that we wants to delete
     (rev) => rev._id.toString() !== req.query.reviewId.toString()
