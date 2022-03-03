@@ -53,15 +53,16 @@ const orderSchema = new Schema({
       },
     },
   ],
+  //the user who has placed the order
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
+  //payment details
   paymentInfo: {
     id: {
       type: String,
-
       required: true,
     },
     status: {
