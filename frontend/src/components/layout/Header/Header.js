@@ -1,5 +1,4 @@
 import React from "react";
-import {BrowserRouter as Router} from "react-router-dom"
 import { ReactNavbar } from "overlay-navbar";
 
 import logo from "../../../images/logo.png";
@@ -39,9 +38,9 @@ const options = {
 
 const Header = () => {
   return (
-    <Router>
+    
       <ReactNavbar {...options} />
-    </Router>
+    
   );
 };
 
