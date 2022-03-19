@@ -7,8 +7,8 @@ const Product = ({ product }) => {
         edit: false,
         color: "rgba(20,20,20,0.1)",
         activeColor: 'tomato',
-        value: 4.5,
-        size: window.innerWidth < 600 ? 10 : 15,
+        value: product.ratings,
+        size: window.innerWidth < 600 ? 10 : 12,
         isHalf: true,
     }
 
@@ -16,7 +16,7 @@ const Product = ({ product }) => {
         <img src={product.images[0].url} alt="product" />
         <p>{product.name}</p>
         <div>
-            <ReactStars {...options} /> <span>(256 reviews)</span>
+            <ReactStars {...options} /> <span className="ratings">({product.numOfReviews} reviews)</span>
         </div>
         <div className="price">{product.price}</div>
     </Link>;

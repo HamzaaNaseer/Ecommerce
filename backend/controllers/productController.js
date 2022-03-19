@@ -16,19 +16,20 @@ exports.createProduct = async (req, res) => {
 };
 
 //get all products
+
 exports.getAllProducts = async (req, res) => {
-  const resultPerpage = 2;
+  const resultPerpage = 8;
   try {
-    const totalProducts = await Product.countDocuments();
+    const productCount = await Product.countDocuments(); //product count
     const apiFeature = new ApiFeatures(Product.find(), req.query)
       .search()
       .filter()
       .pagination(resultPerpage);
     const products = await apiFeature.query;
-    return res.status(200).json({ success: true, totalProducts, products });
+    return res.status(200).json({ success: true, productCount, products });
   } catch (error) {
     console.log("error is ", error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: "internal server error",
     });
