@@ -23,10 +23,21 @@ exports.getAllProducts = async (req, res) => {
     const productCount = await Product.countDocuments(); //product count
     const apiFeature = new ApiFeatures(Product.find(), req.query)
       .search()
-      .filter()
-      .pagination(resultPerPage);
-    const products = await apiFeature.query;
-    return res.status(200).json({ success: true, productCount, products,resultPerPage });
+      .filter();
+
+    let products = await apiFeature.query;
+    let filteredProductsCount = products.length;
+    apiFeature.pagination(resultPerPage);
+
+    products = await apiFeature.query.clone(); //using clone bcz we cannot run same query twice
+
+    return res.status(200).json({
+      success: true,
+      productCount,
+      products,
+      resultPerPage,
+      filteredProductsCount,
+    });
   } catch (error) {
     console.log("error is ", error);
     return res.status(500).json({
