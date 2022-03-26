@@ -3,6 +3,7 @@ import Carousel from "react-material-ui-carousel";
 import "./ProductDetails.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductDetails, clearErrors } from "../../actions/productAction";
+import MetaData from "../layout/MetaData";
 import { useParams } from "react-router-dom";
 import ReactStars from "react-rating-stars-component";
 import ReviewCard from "./ReviewCard.js";
@@ -39,6 +40,7 @@ const ProductDetails = ({ props }) => {
         <Loader />
       ) : (
         <Fragment>
+          <MetaData title={`${product.name} details`}/>
           <div className="ProductDetails">
             <div className="left">
               <Carousel>

@@ -34,6 +34,8 @@ const options = {
   searchIconColorHover: "#eb4034",
   cartIconColorHover: "#eb4034",
   cartIconMargin: "1vmax",
+  logoTransition: 0.2,
+  logoAnimationTime: 0.2
 };
 
 const Header = () => {

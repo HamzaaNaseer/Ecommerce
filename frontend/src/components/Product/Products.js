@@ -4,10 +4,12 @@ import { getProduct, clearErrors } from "../../actions/productAction";
 import Loader from "../layout/Loader/Loader";
 import ProductCard from "../Home/ProductCard";
 import "./Products.css";
+import MetaData from "../layout/MetaData";
 import { useParams } from "react-router-dom";
 import Pagination from 'react-js-pagination'
 import { Typography } from "@mui/material";
 import { Slider } from "@mui/material/";
+import { useAlert } from 'react-alert'
 
 const categories = [
     "Laptop",
@@ -25,14 +27,19 @@ const Products = () => {
     const [price, setPrice] = useState([0, 25000]);
     const [category, setCategory] = useState("");
     const [ratings, setRatings] = useState(0);
+    const alert = useAlert();
     const priceHandler = (event, newPrice) => {
         setPrice(newPrice);
     };
     const { products, loading, error, productsCount, resultPerPage, filteredProductsCount } = useSelector(state => state.product)
     let count = filteredProductsCount;
     useEffect(() => {
-        dispatch(getProduct(keyword, currentPage, price, category,ratings))
-    }, [dispatch, keyword, currentPage, price, category,ratings])
+        dispatch(getProduct(keyword, currentPage, price, category, ratings))
+        if (error) {
+            alert.error(error);
+            dispatch(clearErrors());
+        }
+    }, [dispatch, keyword, currentPage, price, category, ratings, alert, error])
 
     const setCurrentPageNo = (e) => {
         setCurrentPage(e);
@@ -42,6 +49,8 @@ const Products = () => {
         {loading ? <Loader />
             :
             (<Fragment>
+
+                <MetaData title="Products -- HamzaCod3$" />
                 <h2 className="productsHeading">Products</h2>
                 <div className="products">
                     {products && products.map(product =>
