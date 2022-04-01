@@ -3,15 +3,29 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const generateToken = require("../utils/generateToken");
 const sendEmail = require("../utils/sendEmail.js");
+const cloudinary = require("cloudinary");
 
 exports.createUser = async (req, res) => {
+  const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+    folder: "avatars",
+    width: 150,
+    crop: "scale",
+  });
   try {
     const { name, email, password, avatar } = req.body;
     //converting the password into hash
     //salt is auto generated
 
     var hash = bcrypt.hashSync(password, 10);
-    const user = await User.create({ name, email, password: hash, avatar });
+    const user = await User.create({
+      name,
+      email,
+      password: hash,
+      avatar: {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      },
+    });
     generateToken(user, 201, res);
   } catch (error) {
     console.log("error is ", error.message);
