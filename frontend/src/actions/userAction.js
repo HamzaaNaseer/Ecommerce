@@ -1,12 +1,4 @@
-import {
-  ALL_PRODUCT_FAIL,
-  ALL_PRODUCT_REQUEST,
-  ALL_PRODUCT_SUCCESS,
-  PRODUCT_DETAIL_REQUEST,
-  PRODUCT_DETAIL_SUCCESS,
-  PRODUCT_DETAIL_FAIL,
-  CLEAR_ERRORS,
-} from "../constants/productConstants";
+import { CLEAR_ERRORS } from "../constants/productConstants";
 import axios from "axios";
 import {
   LOGIN_FAIL,
@@ -80,7 +72,7 @@ export const logout = () => async (dispatch) => {
     await axios.get("api/v1/user/logout");
     dispatch({ type: LOGOUT_SUCCESS });
   } catch (error) {
-    dispatch({ type: LOGIN_FAIL, payload: error.response.data.message });
+    dispatch({ type: LOGOUT_FAIL, payload: error.response.data.message });
   }
 };
 

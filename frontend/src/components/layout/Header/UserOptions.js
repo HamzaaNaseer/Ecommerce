@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { logout } from "../../../actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
+import Backdrop from "@material-ui/core/Backdrop";
 
 const UserOptions = ({ user }) => {
   //const { cartItems } = useSelector((state) => state.cart);
@@ -50,12 +51,16 @@ const UserOptions = ({ user }) => {
 
   return (
     <Fragment>
+      <Backdrop open={open} style={{ zIndex: "10" }} />
+
       <SpeedDial
         ariaLabel="SpeedDial tooltip example"
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
+        style={{ zIndex: "11" }}
         open={open}
         direction="down"
+        className="speedDial"
         icon={
           <img
             className="speedDialIcon"
@@ -66,6 +71,7 @@ const UserOptions = ({ user }) => {
       >
         {options.map((item) => (
           <SpeedDialAction
+            key={item.name}
             icon={item.icon}
             tooltipTitle={item.name}
             onClick={item.func}
