@@ -8,7 +8,9 @@ import Home from "./components/Home/Home.js";
 import ProductDetails from "./components/Product/ProductDetails.js";
 import Products from "./components/Product/Products.js";
 import Search from "./components/Product/Search.js";
+import Profile from "./components/user/Profile.js";
 import LoginSignUp from "./components/user/LoginSignUp";
+import ProtectedRoute from "./components/Route/ProtectedRoute";
 import store from "./store";
 import { loadUser } from "./actions/userAction";
 import { useSelector } from "react-redux";
@@ -29,6 +31,13 @@ function App() {
         <Route exact path="/product/:id" element={<ProductDetails />} />
         <Route exact path="/products" element={<Products />} />
         <Route exact path="/search" element={<Search />} />
+        {/* <Route exact path="/account" element={<ProtectedRoute />}>
+          <Route exact path="/account" element={<Profile />} />
+        </Route> */}
+        <Route exact path="/account" element={<ProtectedRoute />}>
+          <Route exact path="/account" element={<Profile />} />
+        </Route>
+
         <Route path="/products/:keyword" element={<Products />} />
         <Route exact path="/login" element={<LoginSignUp />} />
       </Routes>
