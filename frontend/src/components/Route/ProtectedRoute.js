@@ -1,18 +1,20 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useSelector } from "react-redux";
-import {  Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { loadUser } from "../../actions/userAction";
+import store from "../../store";
 
 import Loader from "../layout/Loader/Loader";
 
+//Outlet means the inner component
 const ProtectedRoute = () => {
-  const { loading, isAuthenticated, user } = useSelector((state) => state.user);
-  console.log("value of loading is ", loading);
-  return loading ? (
-    <Loader />
-  ) : (
-    <Fragment>
-      {isAuthenticated ? <Outlet /> : <Navigate to="/login" />}
-    </Fragment>
+  const { loading, isAuthenticated } = useSelector((state) => state.user);
+  return (
+    loading === false && (
+      <Fragment>
+        {isAuthenticated ? <Outlet /> : <Navigate to="/login" />}
+      </Fragment>
+    )
   );
 };
 

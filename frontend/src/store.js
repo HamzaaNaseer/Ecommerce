@@ -5,7 +5,7 @@ import {
   productReducer,
   productDetailReducer,
 } from "./reducers/productReducer";
-import { userReducer } from "./reducers/userReducer";
+import { profileReducer, userReducer } from "./reducers/userReducer";
 
 //In this file the store for redux is created.
 
@@ -14,6 +14,7 @@ const reducer = combineReducers({
   product: productReducer,
   productDetails: productDetailReducer,
   user: userReducer,
+  profile: profileReducer,
 });
 let initialState = {};
 const middleware = [thunk];
