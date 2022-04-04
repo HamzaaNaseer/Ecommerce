@@ -193,7 +193,7 @@ exports.updatePassword = async (req, res) => {
     }
     var hash = bcrypt.hashSync(req.body.newPassword, 10);
     user.password = hash;
-    await user.save();
+    await user.save({ validateBeforeSave: true });
     generateToken(user, 200, res);
     console.log(user);
   } catch (error) {
@@ -211,7 +211,25 @@ exports.updateProfile = async (req, res) => {
     name: req.body.name,
   };
 
-  //TODO : ADD CLOUDINARY LATER
+  //adding cloudinary
+
+  if (req.body.avatar !== "") {
+    const user = await User.findById(req.user.id);
+    const imageId = user.avatar.public_id;
+    //destroying the  already stored image from cloudinary
+    await cloudinary.v2.uploader.destroy(imageId);
+
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: "avatars",
+      width: 150,
+      crop: "scale",
+    });
+    newData.avatar = {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url,
+    };
+  }
+
   const user = await User.findByIdAndUpdate(req.user.id, newData, {
     new: true,
     runValidators: true,

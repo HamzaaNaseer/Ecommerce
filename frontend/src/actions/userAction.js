@@ -15,6 +15,9 @@ import {
   UPDATE_PROFILE_REQUEST,
   UPDATE_PROFILE_SUCCESS,
   UPDATE_PROFILE_FAIL,
+  UPDATE_PASSWORD_REQUEST,
+  UPDATE_PASSWORD_SUCCESS,
+  UPDATE_PASSWORD_FAIL,
 } from "../constants/userConstants";
 
 //login user
@@ -81,6 +84,7 @@ export const logout = () => async (dispatch) => {
 export const updateProfile = (userData) => async (dispatch) => {
   try {
     dispatch({ type: UPDATE_PROFILE_REQUEST });
+    //content-type is this because we sending images
     const config = { headers: { "Content-Type": "multipart/form-data" } };
     const { data } = await axios.put(
       "/api/v1/user/me/updateProfile",
@@ -91,6 +95,27 @@ export const updateProfile = (userData) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: UPDATE_PROFILE_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
+//update password
+export const updatePassword = (passwords) => async (dispatch) => {
+  try {
+    dispatch({ type: UPDATE_PASSWORD_REQUEST });
+    const config = { headers: { "Content-Type": "application/json" } };
+    const { data } = await axios.put(
+      "/api/v1/user/password/update",
+      passwords,
+      config
+    );
+    if (data.success)
+      dispatch({ type: UPDATE_PASSWORD_SUCCESS, payload: data.success });
+    else dispatch({ type: UPDATE_PASSWORD_FAIL, payload: data.message });
+  } catch (error) {
+    dispatch({
+      type: UPDATE_PASSWORD_FAIL,
       payload: error.response.data.message,
     });
   }

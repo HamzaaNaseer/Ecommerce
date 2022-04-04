@@ -11,6 +11,8 @@ import Search from "./components/Product/Search.js";
 import Profile from "./components/user/Profile.js";
 import LoginSignUp from "./components/user/LoginSignUp";
 import UpdateProfile from "./components/user/UpdateProfile.js";
+import UpdatePassword from "./components/user/UpdatePassword.js";
+
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import store from "./store";
 import { loadUser } from "./actions/userAction";
@@ -45,6 +47,10 @@ function App() {
 
         <Route exact path="/me/update" element={<ProtectedRoute />}>
           <Route exact path="/me/update" element={<UpdateProfile />} />
+        </Route>
+
+        <Route exact path="/password/update" element={<ProtectedRoute />}>
+          <Route exact path="/password/update" element={<UpdatePassword />} />
         </Route>
 
         <Route path="/products/:keyword" element={<Products />} />

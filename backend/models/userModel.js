@@ -46,6 +46,7 @@ const userSchema = new Schema({
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });
+userSchema.set("validateBeforeSave", true);
 
 //generate jwt token
 userSchema.methods.getJWTToken = function () {
