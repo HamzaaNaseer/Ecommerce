@@ -13,6 +13,8 @@ import LoginSignUp from "./components/user/LoginSignUp";
 import UpdateProfile from "./components/user/UpdateProfile.js";
 import UpdatePassword from "./components/user/UpdatePassword.js";
 import ForgotPassword from "./components/user/ForgotPassword.js";
+import ResetPassword from "./components/user/ResetPassword.js";
+
 
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import store from "./store";
@@ -55,6 +57,8 @@ function App() {
         </Route>
 
         <Route path="/password/forgot" element={<ForgotPassword />} />
+        <Route path="/password/reset/:token" element={<ResetPassword />} />
+
 
         <Route path="/products/:keyword" element={<Products />} />
         <Route exact path="/login" element={<LoginSignUp />} />

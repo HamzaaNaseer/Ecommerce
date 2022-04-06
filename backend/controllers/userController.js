@@ -92,9 +92,14 @@ exports.forgotPassword = async (req, res) => {
     console.log(user);
 
     //creating a reset password url
-    const resetPasswordUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/password/reset/${resetToken}`;
+
+    //TODO UNCOMMENT THIS LATER
+    // const resetPasswordUrl = `${req.protocol}://${req.get(
+    //   "host"
+    // )}/api/v1/password/reset/${resetToken}`;
+
+
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/password/reset/${resetToken}`;
 
     //message that will be sent in the email
     const message = `your password reset token is below : \n\n ${resetPasswordUrl} \n if you have not requested for this then simply ignore this mail`;
@@ -129,6 +134,8 @@ exports.resetPassword = async (req, res) => {
     .update(req.params.token)
     .digest("hex");
 
+
+    //finding userthat has the  token 
   const user = await User.findOne({
     resetPasswordToken,
     resetPasswordExpire: { $gt: Date.now() },
@@ -145,6 +152,7 @@ exports.resetPassword = async (req, res) => {
       message: "password does not match",
     });
   }
+  //hashing  thenstoring the password
   var hash = bcrypt.hashSync(req.body.password, 10);
   user.password = hash;
   user.resetPasswordExpire = undefined;
