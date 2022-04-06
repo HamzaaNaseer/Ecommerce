@@ -12,6 +12,7 @@ import Profile from "./components/user/Profile.js";
 import LoginSignUp from "./components/user/LoginSignUp";
 import UpdateProfile from "./components/user/UpdateProfile.js";
 import UpdatePassword from "./components/user/UpdatePassword.js";
+import ForgotPassword from "./components/user/ForgotPassword.js";
 
 import ProtectedRoute from "./components/Route/ProtectedRoute";
 import store from "./store";
@@ -52,6 +53,8 @@ function App() {
         <Route exact path="/password/update" element={<ProtectedRoute />}>
           <Route exact path="/password/update" element={<UpdatePassword />} />
         </Route>
+
+        <Route path="/password/forgot" element={<ForgotPassword />} />
 
         <Route path="/products/:keyword" element={<Products />} />
         <Route exact path="/login" element={<LoginSignUp />} />
