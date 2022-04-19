@@ -1,5 +1,5 @@
 import React, { Fragment, useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import "./LoginSignUp.css";
 import Loader from "../layout/Loader/Loader";
@@ -9,11 +9,11 @@ import { clearErrors, login, register } from "../../actions/userAction";
 import { useAlert } from "react-alert";
 import { LockOpen, MailOutline, Face } from "@mui/icons-material";
 
-const LoginSignUp = ({ history, location }) => {
+const LoginSignUp = () => {
+  const location = useLocation();
   const dispatch = useDispatch();
   const alert = useAlert();
   const navigate = useNavigate();
-
 
   const { error, loading, isAuthenticated } = useSelector(
     (state) => state.user
@@ -71,7 +71,10 @@ const LoginSignUp = ({ history, location }) => {
     }
   };
 
-  //const redirect = location.search ? location.search.split("=")[1] : "/account";
+  //if we have location.search i.e(?redirect=/shipping)
+  //then it will split it in 2 parts i.e ([?redirect,/shipping])
+  //if  we don't have location.search then simply go to the /account
+  const redirect = location.search ? location.search.split("=")[1] : "/account";
 
   useEffect(() => {
     if (error) {
@@ -80,9 +83,9 @@ const LoginSignUp = ({ history, location }) => {
     }
 
     if (isAuthenticated) {
-      navigate("/products", { replace: true });
+      navigate(redirect);
     }
-  }, [dispatch, error, alert, history, isAuthenticated,navigate]);
+  }, [dispatch, error, alert, isAuthenticated, navigate, redirect]);
 
   const switchTabs = (e, tab) => {
     if (tab === "login") {

@@ -7,10 +7,8 @@ import "./Profile.css";
 
 const Profile = () => {
   const { user, loading, isAuthenticated } = useSelector((state) => state.user);
-  console.log("PRofile");
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("inside use effect");
     if (!isAuthenticated) {
       navigate("/login");
     }

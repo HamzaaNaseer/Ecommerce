@@ -1,7 +1,13 @@
 import React, { Fragment, useState } from "react";
 import "./Header.css";
 import { SpeedDial, SpeedDialAction } from "@material-ui/lab";
-import { Person, ExitToApp, ListAlt, Dashboard } from "@mui/icons-material";
+import {
+  Person,
+  ExitToApp,
+  ListAlt,
+  Dashboard,
+  ShoppingCart,
+} from "@mui/icons-material";
 
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
@@ -10,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Backdrop from "@material-ui/core/Backdrop";
 
 const UserOptions = ({ user }) => {
-  //const { cartItems } = useSelector((state) => state.cart);
+  const { cartItems } = useSelector((state) => state.cart);
 
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +25,21 @@ const UserOptions = ({ user }) => {
 
   const options = [
     { icon: <ListAlt />, name: "Orders", func: orders },
-    { icon: <Person />, name: "Profile", func: account },
+    {
+      icon: <Person />,
+      name: "Profile",
+      func: account,
+    },
+    {
+      icon: (
+        <ShoppingCart
+          style={{ color: cartItems.length > 0 ? "tomato" : "unset" }}
+        />
+      ),
+      name: `Cart(${cartItems.length})`,
+      func: cart,
+    },
+
     { icon: <ExitToApp />, name: "Logout", func: logoutUser },
   ];
 
@@ -75,6 +95,7 @@ const UserOptions = ({ user }) => {
             icon={item.icon}
             tooltipTitle={item.name}
             onClick={item.func}
+            tooltipOpen={window.innerWidth <= 600 ? true : false}
           />
         ))}
       </SpeedDial>
